@@ -52,15 +52,24 @@ impl CubeGame {
         self.cube_sets.iter().all(|draw| draw.iter().all(|(color, draw_num)| bag_content.get(color).is_some_and(|bag_num| draw_num <= bag_num)))
     }
 
-    pub fn minimum_cubes_required(&self) -> HashMap<CubeColor, Option<i32>> {
+    pub fn minimum_cubes_required(&self) -> HashMap<CubeColor, i32> {
         let reds = self.cube_sets.iter().max_by_key(|cube_set| cube_set.get(&CubeColor::Red)).map(|h| h.get(&CubeColor::Red).unwrap_or(&0).to_owned());
         let greens = self.cube_sets.iter().max_by_key(|cube_set| cube_set.get(&CubeColor::Green)).map(|h| h.get(&CubeColor::Green).unwrap_or(&0).to_owned());
         let blues = self.cube_sets.iter().max_by_key(|cube_set| cube_set.get(&CubeColor::Blue)).map(|h| h.get(&CubeColor::Blue).unwrap_or(&0).to_owned());
 
-        HashMap::from([
-            (CubeColor::Red, reds),
-            (CubeColor::Green, greens),
-            (CubeColor::Blue, blues)
-        ])
+        let mut h = HashMap::new();
+        if let Some(r) = reds {
+            h.insert(CubeColor::Red, r);
+        }
+
+        if let Some(g) = greens {
+            h.insert(CubeColor::Green, g);
+        }
+
+        if let Some(b) = blues {
+            h.insert(CubeColor::Blue, b);
+        }
+        
+        h
     }
 }
